@@ -4,7 +4,7 @@
   "description": "String validation module for HTML forms or any kind of situation that requires a specific validation.",
   "main": "./src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node src/index.js"
   },
   "keywords": ["string", "numbers", "password", "email", "phone", "validation", "inputs", "form"],
   "author": "Braian Rosas",

@@ -99,15 +99,13 @@ function generateFilter(opts, cs, adds) {
 /* ///////////////////////////////////////////// */
 /* --------------- CORE FUNCTION --------------- */
 
-module.exports = {
-    
-    stringValidation(str, opts, cs, adds) {
-        // Generate filter
-        const filter = generateFilter(opts, cs, adds);
-        // Call validators
-        return validation(str, filter);
-    }
+function stringValidation(str, opts, cs, adds) {
+    // Generate filter
+    const filter = generateFilter(opts, cs, adds);
+    // Call validators
+    return validation(str, filter);
+}
 
-};
+module.exports = stringValidation;
 
 /* --------------------------------------------- */

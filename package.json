@@ -1,7 +1,7 @@
 {
-  "name": "string-validation",
+  "name": "str-validator",
   "version": "1.0.0",
-  "description": "String validation module for HTML forms or any kind of situation that requires a specific validation.",
+  "description": "Small string validation module for HTML forms or any kind of situation that requires a specific validation.",
   "main": "./src/index.js",
   "scripts": {
     "test": "node src/index.js"

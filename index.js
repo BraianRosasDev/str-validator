@@ -101,7 +101,7 @@ function generateFilter(opts, cs, adds) {
 
 module.exports = {
     
-    strValidator(str, opts, cs, adds) {
+    stringValidation(str, opts, cs, adds) {
         // Generate filter
         const filter = generateFilter(opts, cs, adds);
         // Call validators

@@ -136,7 +136,8 @@ The `options` parameter is a object with the options you want to include in your
 
 * `money`: Tells the validator to accept **only** numbers in currency format, e.g: `$10000`, `$10000.99`, `$10,000.90`. Accepts any of the currency symbols listed in the `currency` option.
 	```javascript
-	strValidation("€55,030,122.8092", {money: true}); // Return true
+    strValidation("€55,030,122.8092", {money: true}); // Return true
+    
 	strValidation("€4444,333,22,1.0", {money: true}); // Return false
 	```
 
@@ -155,10 +156,22 @@ The `options` parameter is a object with the options you want to include in your
 	```javascript
 	strValidation("normal_email123@wow.com", {email: true}); // return true
 	
-	strValidation(".baddot@email.com", {email: true}); // return false
-	strValidation("a@badlenght.com.", {email: true}); // return false
+    strValidation(".baddot@email.com", {email: true}); // return false
+    
+    strValidation("a@badlenght.com.", {email: true}); // return false
+    
 	strValidation("badtermination@email.", {email: true}); // return false
 	```
+* `date`: Tells the validator to accept date string in **mm/dd/yyyy** format following these rules:
+    * Month can't be **00** or greater than **12**.
+    * Day cant't be **00** or greater than **31**.
+    * Year must be **4 digits length**, this includes numbers from **0000** to **9999**.
+
+* `dateFlex`: Same as `date` but in **dd/mm/yyyy**.
+
+* `repeat`: Tells the validator to check if there is any alphabetical (a-z, A-Z) or numerical (0-9) digit repeated **3** or **more** times.
+
+* `pattern`: Tells the validator to check if there is any of these common predictable patterns inside the string: **qwer**, **asd**, **sdfg**, **zxc**, **xyz**, **abc**, **1234**, **2345**, **3456**, **4567**, **5678**, **6789**.
 
 ## Case Sensitive
 
@@ -171,21 +184,27 @@ Any other string, `undefined` or `null` values will made no effect and the valid
 * The `"upper"` string tells the validator to accept only a string in upper case format, e.g: 
 ```javascript
 strValidation("UPPERCASE", {alphabet: true}, "upper"); // WILL RETURN true
+
 strValidation("UpperCase", {alphabet: true}, "upper"); // WILL RETURN false
+
 strValidation("uppercase", {alphabet: true}, "upper"); // WILL RETURN false
 ```
 
 * The `"lower"` string tells the validator to accept only a string in lower case format e.g:
 ```javascript
 strValidation("lowercase", {alphabet: true}, "lower"); // WILL RETURN true
+
 strValidation("LowerCase", {alphabet: true}, "lower"); // WILL RETURN false
+
 strValidation("LOWERCASE", {alphabet: true}, "lower"); // WILL RETURN false
 ```
 
 * If you do not specify any of the above rules, the default option is accept both lower and upper case strings, e.g:
 ```javascript
 strValidation("UPPERCASE", {alphabet: true}); // WILL RETURN true
+
 strValidation("lowercase", {alphabet: true}, null); // WILL RETURN true
+
 strValidation("UPPERlower", {alphabet: true}, "yarr!"); // WILL RETURN true
 ```
 **NOTE:** This parameter only affect `alphabet` and `latin` options.

@@ -23,13 +23,13 @@ const string = "this is my awesome string";
 
 const validate = strValidation(string, {alphabet: true, space: true}, "lower");
 
-console.log(validate) // Prints true
+console.log(validate) // Prints { ok: true, message: "success" }
 ```
 ## How To Use
 
-Validator function has a simple logic, you pass in a string, then define te validation conditionals in an object, define if you want it lower or upper case and add additional digits to the validation if required.
+Validator function has a simple logic, you pass in a string, then define te validation conditionals in an object, define if you want it lower or upper case, choose a min and max length and add additional digits to the validation if required.
 
-If the validator find a non-specified character from the options, then will return `false`, else if the string meet the requirements, then it will return `true`.
+If the validator find a non-specified character from the options or don't meet the length requeriments, then will return an object with `{ ok: false, message: "some message here" }`, else if the string meet the requirements, then it will return `{ ok: true, message: "success" }`.
 
 #### Validate username example:
 ```javascript
@@ -39,12 +39,12 @@ const username = "AwesomeUsername445";
 const validation = strValidation(username, {
 	alphabet: true, // Allow a-z digits
 	numbers: true // Allow 0-9 digits
-}); // Return true
+}); // Return { ok: true, message: "success" }
 
-if (validation) {
+if (validation.ok) {
 	// Send to the server/database
 } else {
-	// Tells the user he typed a not allowed digit
+	// Tells the user what he did wrong
 };
 ```
 #### Validate spanish paragraph
@@ -63,7 +63,7 @@ const validation = strValidation(text, {
 	pausation: true, // Allow . and , digits
 	space: true, // Allow spaces " ".
 	latin: true // Allow accent marks (e.g: áëîòçñ...)
-}); // Return true
+}); // Return { ok: true, message: "success" }
 ```
 #### Validate uppercase text
 ```javascript
@@ -72,7 +72,7 @@ const upperText = "IFTHISISNOTUPPERCASETHENIDONTKNOWWHATITIS";
 const validation = strValidation(upperText, {
 	alphabet: true, // Allow a-z digits
 }, "upper" // Text must be in upper case
-); // Return true
+); // Return { ok: true, message: "success" }
 ```
 #### Validate... this?
 ```javascript
@@ -86,20 +86,21 @@ const options = {
 	space: true
 };
 
-const validation = strValidation(lowerText, options, "lower", "?"); // Return true
+const validation = strValidation(lowerText, options, "lower", "?"); // Return { ok: true, message: "success" }
 ```
 ## Validator Parameters
 
 String validator function accepts a maximum of four (4) parameters in the next order and type:
 
 ```javascript
-strValidation(string, options, caseSensitive, additionals);
+strValidation(string, options, caseSensitive, lengthRange, additionals);
 ```
 
 1. `string` is the string to validate.
 2. `options` is a object with the options you need to pass in to validate.
-3. `caseSensitive`is a string to define if you want to be case sensitive or no.
-4. `additionals`is a string where you define additional characters that you want to appear in the string.
+3. `caseSensitive` is a string to define if you want to be case sensitive or no.
+4. `lengthRange` is a object with that define min length and max length allowed.
+5. `additionals` is a string where you define additional characters that you want to appear in the string.
 
 ## Options
 
@@ -131,13 +132,14 @@ The `options` parameter is a object with the options you want to include in your
 * `backslash`: Tells the validator to accept backslashes.
 
 ### Special options:
+
 **IMPORTANT: These options overrides any of the above including themselves so they should be used one at time**
 
 * `_money`: Tells the validator to accept **only** numbers in currency format, e.g: **$10000**, **$10000.99**, **$10,000.90**. Accepts any of the currency symbols listed in the `currency` option.
 	```javascript
-    strValidation("€55,030,122.8092", {money: true}); // Return true
+    strValidation("€55,030,122.8092", {money: true}); // Return { ok: true, message: "success" }
     
-	strValidation("€4444,333,22,1.0", {money: true}); // Return false
+	strValidation("€4444,333,22,1.0", {money: true}); // Return { ok: false, message: "bad format" }
 	```
 
 * `_formalNumbers`: Same as `money` but excluding currency symbol.
@@ -152,19 +154,20 @@ The `options` parameter is a object with the options you want to include in your
 	7. OPTIONAL: Must have only one **dot** and at least one **letter** after rule 6.
 	
 	A raw translation of the rules could be: **a_@x.y.z**
+
 	```javascript
-	strValidation("normal_email123@wow.com", {_email: true}); // return true
+	strValidation("normal_email123@wow.com", {_email: true}); // Return { ok: true, message: "success" }
 	
-    strValidation(".baddot@email.com", {_email: true}); // return false
+    strValidation(".baddot@email.com", {_email: true}); // Return { ok: false, message: "bad format" }
     
-    strValidation("a@badlenght.com.", {_email: true}); // return false
+    strValidation("a@badlenght.com.", {_email: true}); // Return { ok: false, message: "bad format" }
     
-	strValidation("badtermination@email.", {_email: true}); // return false
+	strValidation("badtermination@email.", {_email: true}); // Return { ok: false, message: "bad format" }
 	```
+
 * `_password`: Tells the validator to check if the string follow these rules:
 	* Must have only alphabetical digits (**a-z** or **A-Z**), numerical digits (**0-9**), base 10 non-alphabetical digits (**~!@#$%^&*_+=`|{}[]():;'<>,.?/\"]**) or accent marks (**áäàâãåéëèêíïìîóöòôõøúüùûçýÿñÁÄÀÂÃÅÉËÈÊÍÏÌÎÓÖÒÔÕØÚÜÙÛÇÝÑ**).
-	* Must have at least **8** min. digits length.
-	* Can not be greater than **24** digits length.
+	* Must have at least **2** min. digits length.
 
 * `_date`: Tells the validator to accept date string in **mm/dd/yyyy** format following these rules:
     * Month can't be **00** or greater than **12**.
@@ -187,43 +190,85 @@ Any other string, `undefined` or `null` values will made no effect and the valid
 
 * The `"upper"` string tells the validator to accept only a string in upper case format, e.g: 
 ```javascript
-strValidation("UPPERCASE", {alphabet: true}, "upper"); // WILL RETURN true
+strValidation("UPPERCASE", {alphabet: true}, "upper"); // Return { ok: true, message: "success" }
 
-strValidation("UpperCase", {alphabet: true}, "upper"); // WILL RETURN false
+strValidation("UpperCase", {alphabet: true}, "upper"); // Return { ok: false, message: "bad digit" }
 
-strValidation("uppercase", {alphabet: true}, "upper"); // WILL RETURN false
+strValidation("uppercase", {alphabet: true}, "upper"); // Return { ok: false, message: "bad digit" }
 ```
 
 * The `"lower"` string tells the validator to accept only a string in lower case format e.g:
 ```javascript
-strValidation("lowercase", {alphabet: true}, "lower"); // WILL RETURN true
+strValidation("lowercase", {alphabet: true}, "lower"); // Return { ok: true, message: "success" }
 
-strValidation("LowerCase", {alphabet: true}, "lower"); // WILL RETURN false
+strValidation("LowerCase", {alphabet: true}, "lower"); // Return { ok: false, message: "bad digit" }
 
-strValidation("LOWERCASE", {alphabet: true}, "lower"); // WILL RETURN false
+strValidation("LOWERCASE", {alphabet: true}, "lower"); // Return { ok: false, message: "bad digit" }
 ```
 
 * If you do not specify any of the above rules, the default option is accept both lower and upper case strings, e.g:
 ```javascript
-strValidation("UPPERCASE", {alphabet: true}); // WILL RETURN true
+strValidation("UPPERCASE", {alphabet: true}); // Return { ok: true, message: "success" }
 
-strValidation("lowercase", {alphabet: true}, null); // WILL RETURN true
+strValidation("lowercase", {alphabet: true}, null); // Return { ok: true, message: "success" }
 
-strValidation("UPPERlower", {alphabet: true}, "yarr!"); // WILL RETURN true
+strValidation("UPPERlower", {alphabet: true}, "yarr!"); // Return { ok: true, message: "success" }
 ```
 **NOTE:** This parameter only affect `alphabet` and `latin` options.
+
+## Lenght Range
+
+`lengthRange` parameter is a object that accepts two (2) values, `min: Integer` and `max: Integer`.
+You can define both, or only one of them with your own specifications or pass in `null` to let defaults.
+
+Default values are:
+
+* `min: 0`
+* `max: 50000000`
+
+Application:
+
+```javascript
+// Validate a password with 8 min digits and 24 max digits
+
+const myPassword = "secret99" // 7 digits length
+const myPasswordTwo = "secret123" // 8 digits length
+const myPasswordThree = "thisisaverylargepasswordwoah!" // 29 digits length
+
+strValidation(myPassword, {_password: true}, null, {min: 8, max: 24});
+// Return { ok: false, message: "bad length" }
+
+strValidation(myPasswordTwo, {_password: true}, null, {min: 8, max: 24});
+// Return { ok: true, message: "success" }
+
+strValidation(myPasswordThree, {_password: true}, null, {min: 8, max: 24});
+// Return { ok: false, message: "bad length" }
+```
+
+```javascript
+// Validate a string with max 30 digits length
+
+const myString = "abcdefghijklmnopqrstuvwxyz" // 26
+const myStringTwo = "Roses are red, violets are blue." // 32
+
+strValidation(myString, {alphabet: true}, null, {max: 30});
+// Return { ok: true, message: "success" }
+
+strValidation(myStringTwo, {alphabet: true, paragraph: true}, null, {max: 30});
+// Return { ok: false, message: "bad length" }
+```
 
 ## Additionals Parameter
 
 The `additionals` parameter is a optional string that tells the validator wich extra digits can accept in it's validation, e.g:
 ```javascript
-// This will return false because we don't specify "!" as accepted digit.
+// This will return { ok: false, ...} because we don't specify "!" as accepted digit.
 strValidation("Validate this !!!", {
 	alphabet: true, 
 	space: true
 }, null);
 
-// This will return true because we specify "!" as accepted digit.
+// This will return { ok: true, ...} because we specify "!" as accepted digit.
 strValidation("Validate this !!!", {
 	alphabet: true, 
 	space: true
@@ -258,3 +303,23 @@ strValidation("V@l1d@t3 th1s !?!", {
 * **"]"** - Must be typed `"\\]"`.
 * **"\"** - Must be typed `"\\\\"`.
 * **"-"** - Must be typed `"\\-"`.
+
+## Validator Return Format
+
+The validator function will always respond with an object with the next format:
+
+* `ok: Boolean`
+* `message: String`
+
+If the validation was successful, will always respond:
+
+* `ok: true`
+* `message: "success"`
+
+If the validation failed:
+
+* `ok: false`
+* `message:`
+	* `"bad length"` if don't meet length requirements.
+	* `"bad digit"` if there is a non-allowed digit.
+	* `"bad format"` if the string format don't meet **special options** requirements.

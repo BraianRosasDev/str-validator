@@ -106,23 +106,21 @@ strValidation(string, options, caseSensitive, additionals);
 The `options` parameter is a object with the options you want to include in your validation, all key values are boolean `true` or `false`.
 
 #### List of accepted options and what they do:
-* `alphabet`: Tells the validator to accept english alphabet characters (from `a` to `z`).
+* `alphabet`: Tells the validator to accept english alphabet characters (from **a** to **z**).
 
-* `numbers`: Tells the validator to accept numbers in string format (from `0` to `9`).
+* `numbers`: Tells the validator to accept numbers in string format (from **0** to **9**).
 
-* `latin`: Tells the validator to accept accent marks from any other latin-based language. Accepted values are `áäàâãåéëèêíïìîóöòôõøúüùûçýÿñ` for lower case and `ÁÄÀÂÃÅÉËÈÊÍÏÌÎÓÖÒÔÕØÚÜÙÛÇÝÑ` for upper case.
+* `latin`: Tells the validator to accept accent marks from any other latin-based language. Accepted values are **áäàâãåéëèêíïìîóöòôõøúüùûçýÿñ** for lower case and **ÁÄÀÂÃÅÉËÈÊÍÏÌÎÓÖÒÔÕØÚÜÙÛÇÝÑ** for upper case.
 
-* `special`: Tells the validator to accept base 10 non-alphabetical digits (~!@#$%^&*_+=|{}[]:;'<>,.?/\"`), parentheses must be added separately.
+* `special`: Tells the validator to accept base 10 non-alphabetical digits (**~!@#$%^&*_+=|{}[]():;'<>,.?/\"`**).
 
-* `symbol`: Tells the validator to accept any symbol of the nex symbols:  \!#$%‰&'*+,./:;<=>?@[]^_`{|}~¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾⅛⅜⅝⅞¿Ð×Þßæð÷þ€≠≤≥√Ω↑↓←→№↔▲►▼◄■□▪▫●○◊", parentheses must be added separetely.
+* `symbol`: Tells the validator to accept any symbol of the nex symbols:  **!#$%‰&'*+,.\/:;<=>?@[]^_`{|}~¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾⅛⅜⅝⅞¿Ð×Þßæð÷þ€≠≤≥√Ω↑↓←→№↔▲►▼◄■□▪▫●○◊()"**.
 
-* `paragraph`: Tells the validator to accept normal paragraph punctutions (`.,:;/ `), include blank space but pharenteses must be added separately.
+* `paragraph`: Tells the validator to accept normal paragraph punctutions (**.,:;/ ()**), include blank spaces.
 
-* `pausation`: Tells the validator to accept dots and commas (`,.`).
+* `pausation`: Tells the validator to accept dots and commas (**,.**).
 
-* `currency`: Tells the validator to accept these currency symbols: `£¥€¢$₩`.
-
-* `password`: Tells the validator to accept recommended password characters, this includes  `a-z`, `A-Z`, `0-9`, `áäàâãåéëèêíïìîóöòôõøúüùûçýÿñÁÄÀÂÃÅÉËÈÊÍÏÌÎÓÖÒÔÕØÚÜÙÛÇÝÑ` and ~!@#$%^&*_+=|{}[\]:;'<>,.?/\"`
+* `currency`: Tells the validator to accept these currency symbols: **£¥€¢$₩**.
 
 * `space`: Tells the validator to accept blank spaces.
 
@@ -130,19 +128,21 @@ The `options` parameter is a object with the options you want to include in your
 
 * `parentheses`: Tells the validator to accept parentheses.
 
-#### Special options:
+* `backslash`: Tells the validator to accept backslashes.
+
+### Special options:
 **IMPORTANT: These options overrides any of the above including themselves so they should be used one at time**
 
-* `money`: Tells the validator to accept **only** numbers in currency format, e.g: `$10000`, `$10000.99`, `$10,000.90`. Accepts any of the currency symbols listed in the `currency` option.
+* `_money`: Tells the validator to accept **only** numbers in currency format, e.g: **$10000**, **$10000.99**, **$10,000.90**. Accepts any of the currency symbols listed in the `currency` option.
 	```javascript
     strValidation("€55,030,122.8092", {money: true}); // Return true
     
 	strValidation("€4444,333,22,1.0", {money: true}); // Return false
 	```
 
-* `formalNumbers`: Same as `money` but excluding currency symbol.
+* `_formalNumbers`: Same as `money` but excluding currency symbol.
 
-* `email`: Tells the validator to accept **only** email format, e.g: `string_validator123@email.com.ok`. Rules are: 
+* `_email`: Tells the validator to accept **only** email format, e.g: **string_validator123@email.com.ok**. Rules are: 
 	1. First character must be a **letter**, upper or lowercase.
 	2. The body can be any **letter, number** or **.-_**, but at least 1 digit length after rule 1.
 	3. Must have only one **@** after rule 2.
@@ -151,26 +151,31 @@ The `options` parameter is a object with the options you want to include in your
 	6. Must have at least one **letter** after rule 5.
 	7. OPTIONAL: Must have only one **dot** and at least one **letter** after rule 6.
 	
-	A raw translation of the rules could be: `a_@x.y.z`
+	A raw translation of the rules could be: **a_@x.y.z**
 	```javascript
-	strValidation("normal_email123@wow.com", {email: true}); // return true
+	strValidation("normal_email123@wow.com", {_email: true}); // return true
 	
-    strValidation(".baddot@email.com", {email: true}); // return false
+    strValidation(".baddot@email.com", {_email: true}); // return false
     
-    strValidation("a@badlenght.com.", {email: true}); // return false
+    strValidation("a@badlenght.com.", {_email: true}); // return false
     
-	strValidation("badtermination@email.", {email: true}); // return false
+	strValidation("badtermination@email.", {_email: true}); // return false
 	```
-* `date`: Tells the validator to accept date string in **mm/dd/yyyy** format following these rules:
+* `_password`: Tells the validator to check if the string follow these rules:
+	* Must have only alphabetical digits (**a-z** or **A-Z**), numerical digits (**0-9**), base 10 non-alphabetical digits (**~!@#$%^&*_+=`|{}[]():;'<>,.?/\"]**) or accent marks (**áäàâãåéëèêíïìîóöòôõøúüùûçýÿñÁÄÀÂÃÅÉËÈÊÍÏÌÎÓÖÒÔÕØÚÜÙÛÇÝÑ**).
+	* Must have at least **8** min. digits length.
+	* Can not be greater than **24** digits length.
+
+* `_date`: Tells the validator to accept date string in **mm/dd/yyyy** format following these rules:
     * Month can't be **00** or greater than **12**.
     * Day cant't be **00** or greater than **31**.
     * Year must be **4 digits length**, this includes numbers from **0000** to **9999**.
 
-* `dateFlex`: Same as `date` but in **dd/mm/yyyy**.
+* `_dateFlex`: Same as `date` but in **dd/mm/yyyy**.
 
-* `repeat`: Tells the validator to check if there is any alphabetical (a-z, A-Z) or numerical (0-9) digit repeated **3** or **more** times.
+* `_repeat`: Tells the validator to check if there is any alphabetical (a-z, A-Z) or numerical (0-9) digit repeated **3** or **more** times.
 
-* `pattern`: Tells the validator to check if there is any of these common predictable patterns inside the string: **qwer**, **asd**, **sdfg**, **zxc**, **xyz**, **abc**, **1234**, **2345**, **3456**, **4567**, **5678**, **6789**.
+* `_pattern`: Tells the validator to check if there is any of these common predictable patterns inside the string: **qwer**, **asd**, **sdfg**, **zxc**, **xyz**, **abc**, **1234**, **2345**, **3456**, **4567**, **5678**, **6789**.
 
 ## Case Sensitive
 
@@ -245,4 +250,11 @@ strValidation("V@l1d@t3 th1s !?!", {
 	special: true,
 });
 ```
-**NOTE**: Spaces, parentheses and hypens can be specified here, but it's recommended to use the built-in options `space`, `parentheses` and `hyphen` to add them safely.
+
+#### IMPORTANT
+
+**Next digits must be placed with the following format if you want to avoid fake validations.**
+
+* **"]"** - Must be typed `"\\]"`.
+* **"\"** - Must be typed `"\\\\"`.
+* **"-"** - Must be typed `"\\-"`.

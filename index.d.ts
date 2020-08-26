@@ -3,6 +3,7 @@ declare module "@axisdev/string-validation" {
         str: string,
         opts: object,
         cs: string,
+        range: object,
         adds: string
     ): boolean;
 };

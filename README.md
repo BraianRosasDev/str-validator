@@ -2,6 +2,8 @@
 
 This is a small module for string validation, can be used to validate inputs from a form or any other situation that requires a string validation.
 
+**IMPORTANT:** This package is in a early versions and have no enough testing for production projects. If you find a bug or issue please report it or send a email to: **braianrosas.dev@outlook.com**.
+
 ## Quick Start
 
 Start installing the package to your project:
@@ -27,7 +29,7 @@ console.log(validate) // Prints true
 
 Validator function has a simple logic, you pass in a string, then define te validation conditionals in an object, define if you want it lower or upper case and add additional digits to the validation if required.
 
-If the string pass the validation, the function will return `true`, else return `false`.
+If the validator find a non-specified character from the options, then will return `false`, else if the string meet the requirements, then it will return `true`.
 
 #### Validate username example:
 ```javascript
@@ -47,7 +49,6 @@ if (validation) {
 ```
 #### Validate spanish paragraph
 ```javascript
-// Validate the string "AwesomeUsername445"
 const text = `Todavía tengo casi todos mis dientes,
 	casi todos mis cabellos y poquísimas canas,
 	puedo hacer y deshacer el amor,
@@ -66,7 +67,6 @@ const validation = strValidation(text, {
 ```
 #### Validate uppercase text
 ```javascript
-// Validate the string "AwesomeUsername445"
 const upperText = "IFTHISISNOTUPPERCASETHENIDONTKNOWWHATITIS";
 
 const validation = strValidation(upperText, {
@@ -76,7 +76,6 @@ const validation = strValidation(upperText, {
 ```
 #### Validate... this?
 ```javascript
-// Validate the string "AwesomeUsername445"
 const lowerText = "áll 1 kn0w 1s thát th1s 1s l0wêr cásê ánd müst rêtürn trüê, ok?";
 
 const options = {
